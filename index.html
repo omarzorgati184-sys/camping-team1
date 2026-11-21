@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17352f">
+  <title>Gestion des camps d’hiver</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <div id="app-error" class="global-error" role="alert" hidden></div>
+  <header class="app-header">
+    <h1>Mou5ayam chtee</h1>
+    <button id="logout-btn" class="button button-light" hidden>Se déconnecter</button>
+  </header>
+
+  <main>
+    <section id="auth-view" class="auth-card">
+      <h2>Connexion</h2>
+      <p>Accédez à la gestion des camps.</p>
+      <form id="auth-form">
+        <label for="email">Adresse e-mail</label>
+        <input id="email" name="email" type="email" autocomplete="email" required>
+        <label for="password">Mot de passe</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
+        <div id="auth-error" class="error" role="alert"></div>
+        <div class="auth-actions">
+          <button class="button" type="submit" name="action" value="login">Se connecter</button>
+          <button class="button button-secondary" type="submit" name="action" value="signup">Créer un compte</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="app-view" hidden>
+      <nav class="tabs" aria-label="Sections">
+        <button class="tab active" data-tab="fani">Fani</button>
+        <button class="tab" data-tab="publications">Publications</button>
+      </nav>
+
+      <section id="fani" class="tab-panel">
+        <div class="camp-toolbar">
+          <label for="camp-select">Camp</label>
+          <select id="camp-select"></select>
+          <div id="camp-details"></div>
+          <button id="admin-camp-btn" class="button admin-only" hidden>Nouveau camp</button>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-heading"><strong id="progress-label">0 / 0 tâches faites</strong></div>
+          <div id="progress-segments" class="progress-segments" aria-label="Progression des tâches"></div>
+        </div>
+
+        <div id="fani-error" class="error"></div>
+        <div id="admin-tools" class="admin-tools admin-only" hidden>
+          <button class="button button-secondary" data-action="add-animator">Ajouter un animateur</button>
+          <button class="button button-secondary" data-action="new-activity">Nouvelle activité</button>
+          <button class="button button-secondary" data-action="new-task">Nouvelle tâche</button>
+        </div>
+
+        <h2>Tâches par animateur</h2>
+        <div id="task-groups"></div>
+
+        <h2>Activités</h2>
+        <div id="activities-list" class="cards"></div>
+      </section>
+
+      <section id="publications" class="tab-panel" hidden>
+        <form id="publication-form" class="publication-form">
+          <label for="publication-text">Message</label>
+          <textarea id="publication-text" rows="4" placeholder="Écrire un message..."></textarea>
+          <label for="publication-file">Pièce jointe (PDF, PNG, JPEG ou WEBP, 10 Mo maximum)</label>
+          <input id="publication-file" type="file" accept="application/pdf,image/png,image/jpeg,image/webp">
+          <div id="publication-error" class="error" role="alert"></div>
+          <button class="button" type="submit">Publier</button>
+        </form>
+        <h2>Fil des publications</h2>
+        <div id="feed" class="feed"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <form id="modal-form" method="dialog">
+      <h2 id="modal-title"></h2>
+      <div id="modal-fields"></div>
+      <div id="modal-error" class="error"></div>
+      <div class="modal-actions">
+        <button class="button button-secondary" type="button" id="modal-cancel">Annuler</button>
+        <button class="button" type="submit">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
