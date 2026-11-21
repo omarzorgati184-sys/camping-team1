@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // تنبيه أمني: هذه القواعد عامة لأن الموقع بلا تسجيل دخول.
+    // رمز JavaScript لا يحمي قاعدة البيانات؛ أي شخص يستطيع استخدام واجهة Firebase مباشرة.
+    function shortText(value, maxLength) {
+      return value is string && value.size() <= maxLength;
+    }
+    match /announcements/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name','text','createdAt','updatedAt','hidden','history'])
+        && shortText(request.resource.data.name, 100)
+        && shortText(request.resource.data.text, 10000)
+        && request.resource.data.hidden == false
+        && request.resource.data.history is list;
+      allow update: if request.resource.data.keys().hasOnly(['name','text','createdAt','updatedAt','hidden','history'])
+        && shortText(request.resource.data.name, 100)
+        && shortText(request.resource.data.text, 10000)
+        && request.resource.data.history is list;
+      allow delete: if true;
+    }
+    match /programVersions/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['text','createdAt']) && shortText(request.resource.data.text, 20000);
+      allow update: if false;
+      allow delete: if true;
+    }
+    match /mealVersions/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['rows','createdAt'])
+        && request.resource.data.rows is list && request.resource.data.rows.size() == 3
+        && request.resource.data.rows[0] is list && request.resource.data.rows[0].size() == 4
+        && request.resource.data.rows[1] is list && request.resource.data.rows[1].size() == 4
+        && request.resource.data.rows[2] is list && request.resource.data.rows[2].size() == 4;
+      allow update: if false;
+      allow delete: if true;
+    }
+    match /pdfFiles/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['category','title','fileName','storagePath','contentType','size','createdAt'])
+        && request.resource.data.category in ['finance','technical','supplies']
+        && request.resource.data.contentType == 'application/pdf'
+        && request.resource.data.size is int && request.resource.data.size <= 20971520
+        && request.resource.data.storagePath is string;
+      allow update: if false;
+      allow delete: if true;
+    }
+    match /meetingOutcomes/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['text','createdAt','updatedAt','history'])
+        && shortText(request.resource.data.text, 10000) && request.resource.data.history is list;
+      allow update: if request.resource.data.keys().hasOnly(['text','createdAt','updatedAt','history'])
+        && shortText(request.resource.data.text, 10000) && request.resource.data.history is list;
+      allow delete: if true;
+    }
+    // Tout document hors collections explicitement autorisées est inaccessible.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

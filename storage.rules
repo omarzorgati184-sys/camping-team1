@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // القراءة عامة؛ الكتابة/الحذف عامة أيضًا دون تسجيل دخول، لذلك رمز الواجهة ليس حماية حقيقية.
+    match /pdfs/{category}/{fileName} {
+      allow read: if true;
+      allow create: if category in ['finance','technical','supplies']
+        && request.resource.size <= 20 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf';
+      allow delete: if true;
+      allow update: if false;
+    }
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

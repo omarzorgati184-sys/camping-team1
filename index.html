@@ -1,101 +1,122 @@
 <!doctype html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17352f">
-  <title>Gestion des camps d’hiver</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#245b45">
+  <title>مخيم الشتاء-قيادة المخيم1</title>
+  <style>
+    :root{color-scheme:light;--green:#245b45;--green2:#39785c;--bg:#f1f5f1;--card:#fff;--text:#202a24;--muted:#66736a;--line:#dce5dc;--danger:#a53535;--soft:#e8f1eb;--shadow:0 5px 20px #18362412}
+    @media(prefers-color-scheme:dark){:root{color-scheme:dark;--green:#183b2c;--green2:#77b18d;--bg:#111a15;--card:#1b2820;--text:#ecf2ed;--muted:#b3c0b6;--line:#35463a;--danger:#ff8f87;--soft:#24392d;--shadow:0 5px 20px #0004}}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 Tahoma,"Noto Sans Arabic",Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;min-height:44px;border:0;border-radius:12px;padding:8px 15px;background:var(--green);color:white;font-weight:700}button:hover{filter:brightness(1.08)}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d99a25;outline-offset:2px}button.secondary{background:var(--soft);color:var(--text)}button.danger{background:var(--danger);color:white}button.small{min-height:36px;padding:5px 11px;font-size:.92rem}button:disabled{opacity:.55;cursor:wait}header{background:var(--green);color:#fff;padding:19px max(16px,calc((100vw - 1100px)/2));box-shadow:var(--shadow)}header h1{font-size:clamp(1.25rem,4vw,1.8rem);margin:0}header p{margin:4px 0 0;color:#e3eee6;font-size:.93rem}main{max-width:1100px;margin:auto;padding:14px}.tabs{display:flex;gap:8px;overflow-x:auto;padding:5px 0 12px;scrollbar-width:thin}.tabs button{white-space:nowrap;flex:0 0 auto;background:var(--card);color:var(--text);border:1px solid var(--line);min-height:46px}.tabs button.active{background:var(--green);color:white;border-color:var(--green)}.section{display:none}.section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}h2{font-size:1.2rem;margin:0 0 12px}h3{font-size:1.05rem;margin:0 0 5px}.muted{color:var(--muted);font-size:.92rem}.form-row{display:grid;gap:10px}.field{display:grid;gap:5px;margin:10px 0}.field label{font-weight:700}input[type=text],input[type=password],textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:var(--bg);color:var(--text)}textarea{min-height:170px;resize:vertical}.notice{border-radius:12px;padding:11px 13px;background:var(--soft);margin:10px 0}.error{background:#a5353515;color:var(--danger);border:1px solid currentColor}.hidden-item{opacity:.67;border-style:dashed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.post-text{white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}.history{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}.history-item{padding:10px 0;border-bottom:1px solid var(--line)}.empty{text-align:center;color:var(--muted);padding:24px}.pdf-form{display:grid;gap:9px}.file-card{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.file-info{min-width:0;overflow-wrap:anywhere}.meal-table-wrap{overflow:auto}.meal-table{width:100%;border-collapse:collapse;min-width:480px}.meal-table td{border:1px solid var(--line);padding:6px}.meal-table input{width:100%;min-width:90px;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:8px;border-radius:8px}.meeting-add[hidden]{display:none}.footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}.status{min-height:1.5em;color:var(--muted)}
+    @media(min-width:700px){main{padding:22px}.form-row{grid-template-columns:1fr 2fr auto;align-items:end}.card{padding:20px}}
+  </style>
 </head>
 <body>
-  <div id="app-error" class="global-error" role="alert" hidden></div>
-  <header class="app-header">
-    <h1>Mou5ayam chtee</h1>
-    <button id="logout-btn" class="button button-light" hidden>Se déconnecter</button>
-  </header>
-
-  <main>
-    <section id="auth-view" class="auth-card">
-      <h2>Connexion</h2>
-      <p>Accédez à la gestion des camps.</p>
-      <form id="auth-form">
-        <label for="email">Adresse e-mail</label>
-        <input id="email" name="email" type="email" autocomplete="email" required>
-        <label for="password">Mot de passe</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
-        <div id="auth-error" class="error" role="alert"></div>
-        <div class="auth-actions">
-          <button class="button" type="submit" name="action" value="login">Se connecter</button>
-          <button class="button button-secondary" type="submit" name="action" value="signup">Créer un compte</button>
-        </div>
-      </form>
-    </section>
-
-    <section id="app-view" hidden>
-      <nav class="tabs" aria-label="Sections">
-        <button class="tab active" data-tab="fani">Fani</button>
-        <button class="tab" data-tab="publications">Publications</button>
-      </nav>
-
-      <section id="fani" class="tab-panel">
-        <div class="camp-toolbar">
-          <label for="camp-select">Camp</label>
-          <select id="camp-select"></select>
-          <div id="camp-details"></div>
-          <button id="admin-camp-btn" class="button admin-only" hidden>Nouveau camp</button>
-        </div>
-
-        <div class="progress-card">
-          <div class="progress-heading"><strong id="progress-label">0 / 0 tâches faites</strong></div>
-          <div id="progress-segments" class="progress-segments" aria-label="Progression des tâches"></div>
-        </div>
-
-        <div id="fani-error" class="error"></div>
-        <div id="admin-tools" class="admin-tools admin-only" hidden>
-          <button class="button button-secondary" data-action="add-animator">Ajouter un animateur</button>
-          <button class="button button-secondary" data-action="new-activity">Nouvelle activité</button>
-          <button class="button button-secondary" data-action="new-task">Nouvelle tâche</button>
-        </div>
-
-        <h2>Tâches par animateur</h2>
-        <div id="task-groups"></div>
-
-        <h2>Activités</h2>
-        <div id="activities-list" class="cards"></div>
-      </section>
-
-      <section id="publications" class="tab-panel" hidden>
-        <form id="publication-form" class="publication-form">
-          <label for="publication-text">Message</label>
-          <textarea id="publication-text" rows="4" placeholder="Écrire un message..."></textarea>
-          <label for="publication-file">Pièce jointe (PDF, PNG, JPEG ou WEBP, 10 Mo maximum)</label>
-          <input id="publication-file" type="file" accept="application/pdf,image/png,image/jpeg,image/webp">
-          <div id="publication-error" class="error" role="alert"></div>
-          <button class="button" type="submit">Publier</button>
-        </form>
-        <h2>Fil des publications</h2>
-        <div id="feed" class="feed"></div>
-      </section>
-    </section>
-  </main>
-
-  <dialog id="modal">
-    <form id="modal-form" method="dialog">
-      <h2 id="modal-title"></h2>
-      <div id="modal-fields"></div>
-      <div id="modal-error" class="error"></div>
-      <div class="modal-actions">
-        <button class="button button-secondary" type="button" id="modal-cancel">Annuler</button>
-        <button class="button" type="submit">Enregistrer</button>
-      </div>
-    </form>
-  </dialog>
-
-  <script src="app.js"></script>
+<header><h1>مخيم الشتاء-قيادة المخيم1</h1><p>مساحة مشتركة لقيادة المخيم ومتابعة أعماله</p></header>
+<main>
+  <nav class="tabs" role="tablist" aria-label="أقسام الموقع">
+    <button class="active" data-tab="announcements" role="tab">الإعلانات</button><button data-tab="program" role="tab">البرنامج</button><button data-tab="finance" role="tab">المالية</button><button data-tab="technical" role="tab">البرنامج الفني</button><button data-tab="meals" role="tab">البرنامج الغذائي</button><button data-tab="supplies" role="tab">متابعة التموين</button><button data-tab="meetings" role="tab">مخرجات الاجتماعات</button>
+  </nav>
+  <div id="connection-status" class="notice" role="status">جارٍ الاتصال بقاعدة البيانات…</div>
+  <section id="section-announcements" class="section active" role="tabpanel">
+    <div class="card"><h2>إعلان جديد</h2><form id="announcement-form"><div class="form-row"><div class="field"><label for="announcement-name">الاسم (اختياري)</label><input id="announcement-name" type="text" maxlength="100" placeholder="مجهول"></div><div class="field"><label for="announcement-text">نص الإعلان</label><textarea id="announcement-text" required maxlength="10000" placeholder="اكتب الإعلان هنا"></textarea></div><button type="submit">نشر</button></div><div id="announcement-status" class="status" aria-live="polite"></div></form></div>
+    <div id="announcements-list" aria-live="polite"></div>
+  </section>
+  <section id="section-program" class="section" role="tabpanel"><div class="card"><h2>البرنامج</h2><p id="program-updated" class="muted">لا يوجد برنامج محفوظ بعد.</p><label class="field" for="program-editor">نص البرنامج</label><textarea id="program-editor" placeholder="اكتب البرنامج هنا"></textarea><div class="actions"><button id="program-save">حفظ نسخة جديدة</button></div><div id="program-status" class="status" aria-live="polite"></div><div id="program-history"></div></div></section>
+  <section id="section-finance" class="section" role="tabpanel"><div class="card"><h2>المالية</h2><div class="pdf-uploader" data-category="finance"></div><div id="files-finance"></div></div></section>
+  <section id="section-technical" class="section" role="tabpanel"><div class="card"><h2>البرنامج الفني</h2><div class="pdf-uploader" data-category="technical"></div><div id="files-technical"></div></div></section>
+  <section id="section-meals" class="section" role="tabpanel"><div class="card"><h2>البرنامج الغذائي</h2><p class="muted">جدول من ثلاثة أيام وأربع فترات غذائية.</p><div class="meal-table-wrap"><table class="meal-table"><tbody id="meal-grid"></tbody></table></div><div class="actions"><button id="meal-save">حفظ الجدول</button><button id="meal-clear" class="danger">حذف الجدول</button></div><div id="meal-status" class="status" aria-live="polite"></div><div id="meal-history"></div></div></section>
+  <section id="section-supplies" class="section" role="tabpanel"><div class="card"><h2>متابعة التموين</h2><div class="pdf-uploader" data-category="supplies"></div><div id="files-supplies"></div></div></section>
+  <section id="section-meetings" class="section" role="tabpanel"><div class="card"><h2>مخرجات الاجتماعات</h2><button id="meeting-add-toggle" class="secondary">إضافة فقرة</button><form id="meeting-form" class="meeting-add" hidden><div class="field"><label for="meeting-text">الفقرة</label><textarea id="meeting-text" required maxlength="10000" placeholder="اكتب مخرجات الاجتماع"></textarea></div><button type="submit">نشر</button><div id="meeting-status" class="status" aria-live="polite"></div></form></div><div id="meetings-list"></div></section>
+</main><div class="footer">محتوى هذا الموقع مشترك ويظهر تلقائيًا لجميع الزوار.</div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<script>
+'use strict';
+// غيّر هذا الرمز قبل النشر. الرمز داخل المتصفح ليس وسيلة حماية حقيقية.
+const ACCESS_CODE = 'rovers';
+// ألصق إعدادات Firebase من إعدادات المشروع > تطبيقات الويب.
+const firebaseConfig = {
+  apiKey: 'ضع-apiKey-هنا',
+  authDomain: 'ضع-authDomain-هنا',
+  projectId: 'ضع-projectId-هنا',
+  storageBucket: 'ضع-storageBucket-هنا',
+  messagingSenderId: 'ضع-messagingSenderId-هنا',
+  appId: 'ضع-appId-هنا'
+};
+const MAX_PDF_BYTES = 20 * 1024 * 1024;
+const categories = ['finance','technical','supplies'];
+const categoryArabic = {finance:'المالية',technical:'البرنامج الفني',supplies:'متابعة التموين'};
+let db, storage;
+const unlocked = new Set(JSON.parse(sessionStorage.getItem('unlockedSections') || '[]'));
+const state = {program:[], meals:[], announcements:[], meetings:[], files:{}};
+const $ = id => document.getElementById(id);
+const stamp = () => firebase.firestore.FieldValue.serverTimestamp();
+const dateText = value => {
+  if (!value) return 'وقت الحفظ';
+  const date = typeof value.toDate === 'function' ? value.toDate() : new Date(value);
+  return new Intl.DateTimeFormat('ar', {dateStyle:'medium',timeStyle:'short'}).format(date);
+};
+const escapeText = value => String(value ?? '');
+function status(id, text, isError=false) { const el=$(id); if(el){el.textContent=text;el.classList.toggle('error',isError);} }
+function setConnection(message, error=false){const el=$('connection-status');el.textContent=message;el.classList.toggle('error',error);}
+function showError(error){console.error(error);return error?.message || 'حدث خطأ. تحقق من الاتصال وإعدادات Firebase.';}
+function requireCode(section){
+  if(unlocked.has(section))return true;
+  const entered=window.prompt('أدخل كلمة السر للمتابعة:');
+  if(entered===null)return false;
+  if(entered!==ACCESS_CODE){window.alert('كلمة السر خاطئة');return false;}
+  unlocked.add(section);sessionStorage.setItem('unlockedSections',JSON.stringify([...unlocked]));return true;
+}
+function el(tag, text, className){const node=document.createElement(tag);if(text!==undefined&&text!==null)node.textContent=String(text);if(className)node.className=className;return node;}
+function actionButton(label, fn, className='secondary'){const b=el('button',label,'small '+className);b.type='button';b.addEventListener('click',fn);return b;}
+function emptyMessage(text){return el('div',text,'empty');}
+function initTabs(){document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===button));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='section-'+button.dataset.tab));}));}
+function initMealGrid(){const body=$('meal-grid');for(let row=0;row<3;row++){const tr=document.createElement('tr');for(let col=0;col<4;col++){const td=document.createElement('td'),input=document.createElement('input');input.type='text';input.maxLength=300;input.setAttribute('aria-label',`اليوم ${row+1}، الوجبة ${col+1}`);td.append(input);tr.append(td);}body.append(tr);}}
+function listenAll(){
+  db.collection('announcements').orderBy('createdAt','desc').onSnapshot(s=>{state.announcements=s.docs.map(d=>({id:d.id,...d.data()}));renderAnnouncements();},e=>setConnection('تعذر تحميل الإعلانات: '+showError(e),true));
+  db.collection('programVersions').orderBy('createdAt','desc').onSnapshot(s=>{state.program=s.docs.map(d=>({id:d.id,...d.data()}));renderProgram();},e=>status('program-status','تعذر تحميل البرنامج: '+showError(e),true));
+  db.collection('mealVersions').orderBy('createdAt','desc').onSnapshot(s=>{state.meals=s.docs.map(d=>({id:d.id,...d.data()}));renderMeals();},e=>status('meal-status','تعذر تحميل الجدول: '+showError(e),true));
+  db.collection('meetingOutcomes').orderBy('createdAt','desc').onSnapshot(s=>{state.meetings=s.docs.map(d=>({id:d.id,...d.data()}));renderMeetings();},e=>setConnection('تعذر تحميل مخرجات الاجتماعات: '+showError(e),true));
+  db.collection('pdfFiles').orderBy('createdAt','desc').onSnapshot(s=>{state.files={};s.docs.forEach(d=>{const x={id:d.id,...d.data()};(state.files[x.category] ||= []).push(x);});categories.forEach(renderFiles);},e=>setConnection('تعذر تحميل قائمة الملفات: '+showError(e),true));
+}
+function renderAnnouncements(){const root=$('announcements-list');root.replaceChildren();const visible=state.announcements.filter(a=>!a.hidden);if(!visible.length){root.append(emptyMessage('لا توجد إعلانات بعد.'));return;}visible.forEach(a=>{
+  const card=el('article',null,'card');const heading=el('h3',a.name||'مجهول');const when=el('div',dateText(a.createdAt),'muted');const text=el('p',a.text,'post-text');const controls=el('div',null,'actions');
+  controls.append(actionButton('تبديل',()=>editAnnouncement(a)));controls.append(actionButton(`السجل (${(a.history||[]).length})`,()=>showAnnouncementHistory(a)));
+  controls.append(actionButton('إخفاء',()=>toggleAnnouncement(a,true),'secondary'));
+  controls.append(actionButton('حذف',()=>deleteAnnouncement(a),'danger'));
+  card.append(heading,when,text,controls);root.append(card);
+ });}
+$('announcement-form').addEventListener('submit',async e=>{e.preventDefault();const text=$('announcement-text').value.trim();if(!text){status('announcement-status','اكتب نص الإعلان أولًا.',true);return;}try{await db.collection('announcements').add({name:$('announcement-name').value.trim()||'مجهول',text,createdAt:stamp(),updatedAt:stamp(),hidden:false,history:[]});$('announcement-form').reset();status('announcement-status','تم نشر الإعلان ✓');}catch(err){status('announcement-status','تعذر النشر: '+showError(err),true);}});
+async function editAnnouncement(a){const text=window.prompt('عدّل نص الإعلان:',a.text);if(text===null)return;if(!text.trim()){window.alert('اكتب نص الإعلان قبل الحفظ.');return;}const name=window.prompt('الاسم:',a.name||'مجهول');if(name===null)return;try{const ref=db.collection('announcements').doc(a.id);await db.runTransaction(async tx=>{const snap=await tx.get(ref);if(!snap.exists)throw new Error('الإعلان غير موجود.');const old=snap.data();tx.update(ref,{name:name.trim()||'مجهول',text:text.trim(),updatedAt:stamp(),history:[...(old.history||[]),{name:old.name||'مجهول',text:old.text,at:new Date().toISOString()}]});});}catch(err){window.alert('تعذر التعديل: '+showError(err));}}
+function showAnnouncementHistory(a){const history=a.history||[];if(!history.length){window.alert('لا يوجد سجل سابق لهذا الإعلان.');return;}window.alert(history.map((h,i)=>`${i+1}) ${h.name||'مجهول'} — ${dateText(h.at)}\n${h.text}`).join('\n\n──────────\n\n'));}
+async function toggleAnnouncement(a,hide){if(!requireCode('announcements'))return;try{await db.collection('announcements').doc(a.id).update({hidden:hide,updatedAt:stamp()});}catch(err){window.alert('تعذر الإخفاء: '+showError(err));}}
+async function deleteAnnouncement(a){if(!requireCode('announcements'))return;if(!window.confirm('هل تريد الحذف نهائيًا؟'))return;try{await db.collection('announcements').doc(a.id).delete();}catch(err){window.alert('تعذر الحذف: '+showError(err));}}
+function renderProgram(){const latest=state.program[0];$('program-updated').textContent=latest?'آخر تعديل: '+dateText(latest.createdAt):'لا يوجد برنامج محفوظ بعد.';if(document.activeElement!==$('program-editor'))$('program-editor').value=latest?.text||'';const root=$('program-history');root.replaceChildren();if(state.program.length>1){root.append(el('h3','سجل نسخ البرنامج','history'));state.program.slice(1).forEach(version=>{const row=el('div',null,'history-item');row.append(el('p',dateText(version.createdAt),'muted'),el('p',version.text,'post-text'),actionButton('حذف هذه النسخة',()=>deleteProgramVersion(version),'danger'));root.append(row);});}}
+$('program-save').addEventListener('click',async()=>{if(!requireCode('program'))return;const text=$('program-editor').value.trim();if(!text){status('program-status','اكتب نص البرنامج قبل الحفظ.',true);return;}try{await db.collection('programVersions').add({text,createdAt:stamp()});status('program-status','تم حفظ نسخة جديدة ✓');}catch(e){status('program-status','تعذر الحفظ: '+showError(e),true);}});
+async function deleteProgramVersion(v){if(!requireCode('program'))return;if(!confirm('هل تريد الحذف نهائيًا؟'))return;try{await db.collection('programVersions').doc(v.id).delete();}catch(e){status('program-status','تعذر الحذف: '+showError(e),true);}}
+function renderMeals(){const latest=state.meals[0];const inputs=[...$('meal-grid').querySelectorAll('input')];if(latest&&document.activeElement?.tagName!=='INPUT'){inputs.forEach((input,i)=>input.value=latest.rows?.[Math.floor(i/4)]?.[i%4]||'');}else if(!latest){inputs.forEach(input=>input.value='');}const root=$('meal-history');root.replaceChildren();if(latest){root.append(el('p','آخر تعديل: '+dateText(latest.createdAt),'muted'));}if(state.meals.length>1){root.append(el('h3','النسخ السابقة','history'));state.meals.slice(1).forEach(v=>{const row=el('div',null,'history-item');row.append(el('p','نسخة محفوظة: '+dateText(v.createdAt),'muted'),actionButton('عرض النسخة',()=>{[...$('meal-grid').querySelectorAll('input')].forEach((input,i)=>input.value=v.rows?.[Math.floor(i/4)]?.[i%4]||'');},'secondary'));root.append(row);});}}
+$('meal-save').addEventListener('click',async()=>{if(!requireCode('meals'))return;const vals=[...$('meal-grid').querySelectorAll('input')].map(i=>i.value.trim());const rows=[0,1,2].map(r=>vals.slice(r*4,r*4+4));try{await db.collection('mealVersions').add({rows,createdAt:stamp()});status('meal-status','تم حفظ الجدول ✓');}catch(e){status('meal-status','تعذر الحفظ: '+showError(e),true);}});
+$('meal-clear').addEventListener('click',async()=>{if(!requireCode('meals'))return;if(!confirm('هل تريد الحذف نهائيًا؟'))return;const latest=state.meals[0];if(!latest){$('meal-grid').querySelectorAll('input').forEach(i=>i.value='');status('meal-status','لا يوجد جدول محفوظ.');return;}try{await db.collection('mealVersions').doc(latest.id).delete();$('meal-grid').querySelectorAll('input').forEach(i=>i.value='');status('meal-status','تم حذف الجدول الحالي.');}catch(e){status('meal-status','تعذر الحذف: '+showError(e),true);}});
+function renderFiles(category){const root=$('files-'+category);root.replaceChildren();const files=state.files[category]||[];if(!files.length){root.append(emptyMessage('لا توجد ملفات PDF.'));return;}files.forEach(file=>{const card=el('article',null,'card file-card'),info=el('div',null,'file-info');info.append(el('h3',file.title||file.fileName||'ملف PDF'),el('div',dateText(file.createdAt),'muted'));const actions=el('div',null,'actions');actions.append(actionButton('فتح / تحميل',()=>openPdf(file),'secondary'));actions.append(actionButton('حذف',()=>deletePdf(file),'danger'));card.append(info,actions);root.append(card);});}
+document.querySelectorAll('.pdf-uploader').forEach(container=>{const category=container.dataset.category;container.innerHTML='<form class="pdf-form"><label>عنوان الملف (اختياري)<input type="text" name="title" maxlength="150" placeholder="عنوان الملف"></label><label>اختر ملف PDF (20 ميغابايت كحد أقصى)<input type="file" name="pdf" accept="application/pdf,.pdf" required></label><button type="submit">رفع PDF</button><div class="status" aria-live="polite"></div></form>';container.querySelector('form').addEventListener('submit',e=>uploadPdf(e,category));});
+async function uploadPdf(event,category){event.preventDefault();if(!requireCode(category))return;const form=event.currentTarget,file=form.elements.pdf.files[0],message=form.querySelector('.status'),button=form.querySelector('button');if(!file){message.textContent='اختر ملف PDF أولًا.';return;}if(file.type!=='application/pdf'&&!file.name.toLowerCase().endsWith('.pdf')){message.textContent='يُسمح برفع ملفات PDF فقط.';return;}if(file.size>MAX_PDF_BYTES){message.textContent='حجم الملف يتجاوز 20 ميغابايت.';return;}const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const path=`pdfs/${category}/${Date.now()}-${safeName}`;button.disabled=true;message.textContent='جاري الرفع…';let uploaded=false;try{const ref=storage.ref().child(path);await ref.put(file,{contentType:'application/pdf'});uploaded=true;await db.collection('pdfFiles').add({category,title:form.elements.title.value.trim()||file.name,fileName:file.name,storagePath:path,contentType:'application/pdf',size:file.size,createdAt:stamp()});form.reset();message.textContent='تم الرفع ✓';}catch(err){message.textContent='فشل الرفع: '+showError(err);if(uploaded){try{await storage.ref().child(path).delete();}catch(cleanup){console.warn('تعذر تنظيف الملف غير المسجل',cleanup);}}}finally{button.disabled=false;}}
+async function openPdf(file){try{const url=await storage.ref().child(file.storagePath).getDownloadURL();const link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener';link.download=file.fileName||'';document.body.append(link);link.click();link.remove();}catch(e){window.alert('تعذر فتح الملف: '+showError(e));}}
+async function deletePdf(file){if(!requireCode(file.category))return;if(!confirm('هل تريد الحذف نهائيًا؟'))return;try{await storage.ref().child(file.storagePath).delete();await db.collection('pdfFiles').doc(file.id).delete();}catch(e){window.alert('تعذر حذف الملف: '+showError(e)+'\nقد يكون الملف قد أزيل من التخزين بالفعل؛ أعد المحاولة أو راجع Firebase.');}}
+$('meeting-add-toggle').addEventListener('click',()=>{if(!requireCode('meetings'))return;$('meeting-form').hidden=false;$('meeting-text').focus();});
+$('meeting-form').addEventListener('submit',async e=>{e.preventDefault();if(!requireCode('meetings'))return;const text=$('meeting-text').value.trim();if(!text){status('meeting-status','اكتب الفقرة قبل النشر.',true);return;}try{await db.collection('meetingOutcomes').add({text,createdAt:stamp(),updatedAt:stamp(),history:[]});$('meeting-form').reset();status('meeting-status','تم نشر الفقرة ✓');}catch(err){status('meeting-status','تعذر النشر: '+showError(err),true);}});
+function renderMeetings(){const root=$('meetings-list');root.replaceChildren();if(!state.meetings.length){root.append(emptyMessage('لا توجد مخرجات اجتماعات بعد.'));return;}state.meetings.forEach(item=>{const card=el('article',null,'card'),text=el('p',item.text,'post-text'),date=el('div',dateText(item.createdAt),'muted'),actions=el('div',null,'actions');actions.append(actionButton(`السجل (${(item.history||[]).length})`,()=>showMeetingHistory(item),'secondary'));actions.append(actionButton('تبديل',()=>editMeeting(item),'secondary'));actions.append(actionButton('حذف',()=>deleteMeeting(item),'danger'));card.append(text,date,actions);root.append(card);});}
+function showMeetingHistory(item){const history=item.history||[];if(!history.length){alert('لا يوجد سجل سابق لهذه الفقرة.');return;}alert(history.map((h,i)=>`${i+1}) ${dateText(h.at)}\n${h.text}`).join('\n\n──────────\n\n'));}
+async function editMeeting(item){if(!requireCode('meetings'))return;const text=prompt('عدّل الفقرة:',item.text);if(text===null)return;if(!text.trim()){alert('اكتب نص الفقرة قبل الحفظ.');return;}try{const ref=db.collection('meetingOutcomes').doc(item.id);await db.runTransaction(async tx=>{const snap=await tx.get(ref);if(!snap.exists)throw new Error('الفقرة غير موجودة.');const old=snap.data();tx.update(ref,{text:text.trim(),updatedAt:stamp(),history:[...(old.history||[]),{text:old.text,at:new Date().toISOString()}]});});}catch(e){alert('تعذر التعديل: '+showError(e));}}
+async function deleteMeeting(item){if(!requireCode('meetings'))return;if(!confirm('هل تريد الحذف نهائيًا؟'))return;try{await db.collection('meetingOutcomes').doc(item.id).delete();}catch(e){alert('تعذر الحذف: '+showError(e));}}
+initTabs();initMealGrid();
+try{
+  const missing=Object.values(firebaseConfig).some(v=>!v||String(v).startsWith('ضع-'));
+  if(missing||!window.firebase){setConnection('أضف إعدادات Firebase الصحيحة داخل firebaseConfig في هذا الملف لبدء التشغيل.',true);}
+  else{firebase.initializeApp(firebaseConfig);db=firebase.firestore();storage=firebase.storage();setConnection('متصل — التغييرات تظهر تلقائيًا لدى جميع الزوار.');listenAll();}
+}catch(error){setConnection('تعذر بدء Firebase: '+showError(error),true);}
+</script>
 </body>
 </html>
